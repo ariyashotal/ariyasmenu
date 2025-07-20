@@ -1,0 +1,2109 @@
+<!DOCTYPE html>
+<html lang="en">
+<!-- Previous head content remains the same -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shree Sai Krishna - Hotel Menu</title>
+    <style>
+        /* Previous styles remain the same */
+        /* Only updating the grid-related styles */
+        
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr); /* Always 2 columns */
+            gap: 10px;
+            padding: 10px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Remove the media queries that were changing grid columns */
+        /* The rest of the styles remain the same */
+
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 12px;
+            text-transform: uppercase;
+            padding: 12px; /* Slightly reduced padding */
+            margin: 5px; /* Reduced margin */
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px #ffffff89 ;
+        }
+
+        .category-icon {
+            font-size: 1.8rem; /* Slightly smaller icon */
+            margin-bottom: 8px;
+        }
+
+        .category-name {
+            font-weight: 600;
+            color: #00796B;
+            font-size: 0.9rem; /* Smaller font size */
+        }
+
+        /* Rest of the styles remain identical to the previous version */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes scaleIn {
+            from { transform: scale(0.95); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        body {
+            background: linear-gradient(135deg, #0b2b27 0%, #145026 100%);
+            font-family: 'Arial', sans-serif;
+            color: #71d4ba;
+            min-height: 100vh;
+            max-width: 100vw;
+            overflow-x: hidden;
+        }
+
+        .max-w-4xl {
+            width: 100%;
+            padding: 0;
+            margin: 0;
+        }
+
+        .brand-header {
+            text-align: center;
+            color: white;
+            padding: 20px 5%;
+            margin-bottom: 20px;
+            background: linear-gradient(145deg, #08221e 0%, #08221e 100%);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            animation: fadeIn 0.8s ease-out;
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+        }
+
+        .brand-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(64, 143, 101, 0.159) 0%, transparent 70%);
+            transform: rotate(-45deg);
+            z-index: 1;
+        }
+
+        .brand-name {
+            font-size: 2.0rem;
+            font-weight: bold;
+            text-shadow: 6px 1px 20px rgba(255, 255, 255, 0.9);
+            margin-bottom: 15px;
+            letter-spacing: 2px;
+            position: relative;
+            z-index: 2;
+            background: linear-gradient(to right, #FFFFFF, #E0E0E0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .brand-tagline {
+            font-size: 1rem;
+            opacity: 0.9;
+            position: relative;
+            z-index: 2;
+            color: rgba(255,255,255,0.9);
+            font-style: italic;
+        }
+
+        .categories-screen, .menu-items-screen {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .active {
+            display: block;
+            opacity: 1;
+        }
+
+        .back-button {
+            display: flex;
+            align-items: center;
+            color: #08221e;
+            border: none;
+            background: #F5F5F5;
+            cursor: pointer;
+            font-size: 0.9rem;
+            padding: 8px 15px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            margin: 10px;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 0 10px;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .category-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-left: 10px;
+            color: white;
+        }
+
+        .menu-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+            color: white;
+        }
+
+        .price-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .price-box {
+            padding: 8px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .price-box.ac { background-color: #E0F2F1; }
+        .price-box.non-ac { background-color: #B2DFDB; }
+        .price-box.parcel { background-color: #15645c; }
+
+        .price-label {
+            color: #000000;
+            font-size: 0.8rem;
+            margin-bottom: 2px;
+            font-weight: bold;
+        }
+
+        .price-value {
+            font-weight: bold;
+            font-size: 1.1rem;
+            color: #000000;
+        }
+
+        .divider {
+            width: 40px;
+            height: 2px;
+            background: #39aa9d;
+            margin: 10px auto;
+            border-radius: 2px;
+        }
+
+        footer {
+            background-color: #08221e;
+            color: #efebe7;
+            text-align: center;
+            padding: 15px;
+            font-size: 12px;
+            width: 100%;
+            box-shadow: 0 -5px 15px rgba(0,0,0,0.1);
+            margin-top: 20px;
+        }
+
+        footer h2 {
+            color: white;
+            margin-bottom: 8px;
+            font-weight: 500;
+            font-size: 1rem;
+        }
+
+        footer p {
+            margin: 5px 0;
+            opacity: 0.9;
+            font-size: 0.9rem;
+        }
+
+        #menuItemsList {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 0 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="max-w-4xl">
+        <div class="brand-header">
+            <img src="logo.png" alt="hotel ariyas" style="width: 70px; margin-bottom: 15px;">
+            <h1 class="brand-name">HOTEL ARIYAS</h1>
+            <p class="brand-tagline"><marquee>Taste of Tradition</marquee></p>
+        </div>
+
+        <div class="categories-screen active" id="categoriesScreen">
+            <h1 class="menu-title">Our Menu</h1>
+            <div class="grid" id="categoriesGrid"></div>
+        </div>
+
+        <div class="menu-items-screen" id="menuItemsScreen">
+            <div class="header">
+                <button class="back-button" onclick="showCategories()">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path d="M15 19l-7-7 7-7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    Back
+                </button>
+                <h2 class="category-title" id="selectedCategoryTitle"></h2>
+            </div>
+            <div id="menuItemsList"></div>
+        </div>
+    </div>
+
+    <footer>
+        <h2><b>WELCOME</b></h2>
+        <h2><b>HOTEL ARIYAS</b></h2>
+        <p># 36-A, Post Office Street, Covai Main Road</p> 
+        <p>Avinashi - 641 654</p>
+        <p>Contact - +91 99627 59797</p>
+    </footer>
+    <script>
+        const categories = [
+            { id: 1, name: "IDLY & OTHERS", icon: "🍽️" },
+            { id: 2, name: "DOSA VARIETIES", icon: "🟡" },
+            { id: 3, name: "IDIYAPPAM & APPAM", icon: "🍚" },
+            { id: 4, name: "IDLY VARIETIES", icon: "🍚" },
+            { id: 5, name: "MEALS", icon: "🍱" },
+            { id: 6, name: "VARIETIES RICE", icon: "🍛" },
+            { id: 7, name: "FRIED RICE & NOODLES", icon: "🍜" },
+            { id: 8, name: "STARTERS", icon: "🥟" },
+            { id: 9, name: "PAROTTA VARIETIES", icon: "🫓" },
+            { id: 10, name: "SEVAI VARIETIES", icon: "🍜" },
+            { id: 11, name: "TANDOORI ITEMS", icon: "♨️" },
+            { id: 12, name: "MASALAS & GRAVY", icon: "🍲" },
+            { id: 13, name: "SALAD", icon: "🥗" },
+            { id: 14, name: "TIKKA", icon: "🍢" },
+            { id: 15, name: "RAITAS", icon: "🍚" },
+            { id: 16, name: "SOUPS", icon: "🍲" },
+            { id: 17, name: "CHAAT VARIETIES", icon: "🥪" },
+            { id: 18, name: "SNACKS", icon: "🍟" },
+            { id: 19, name: "FRESH JUICES", icon: "🍹" },
+            { id: 20, name: "TEA & COFFEE", icon: "☕" },
+            
+        ];
+
+
+        //<<<<<<<<<<<<<<<<<<<<<<< MENU LISTS >>>>>>>>>>>>>>>>>>>>>>>>>>
+        const menuItems = {
+        //<<<<<<<<<<<<<<<<<<<<<<< IDLY & OTHERS >>>>>>>>>>>>>>>>>>>>>>>>>>
+            "IDLY & OTHERS": [
+        {
+            name: "Idly",
+            prices: {
+                ac: 40.00,
+                nonAc: 35.00,
+                parcel: 38.00
+            }
+        },
+        {
+            name: "Idly (Single)",
+            prices: {
+                ac: 20.00,
+                nonAc: 17.50,
+                parcel: 19.00
+            }
+        },
+        {
+            name: "Sambar (Mini) Idly",
+            prices: {
+                ac: 75.00,
+                nonAc: 70.00,
+                parcel: 75.00
+            }
+        },
+        {
+            name: "Sothi Idly",
+            prices: {
+                ac: 75.00,
+                nonAc: 70.00,
+                parcel: 75.00
+            }
+        },
+        {
+            name: "Pongal",
+            prices: {
+                ac: 80.00,
+                nonAc: 75.00,
+                parcel: 80.00
+            }
+        },
+        {
+            name: "Poori Masala",
+            prices: {
+                ac: 80.00,
+                nonAc: 75.00,
+                parcel: 80.00
+            }
+        },
+        {
+            name: "Poori (Single)",
+            prices: {
+                ac: 40.00,
+                nonAc: 37.50,
+                parcel: 40.00
+            }
+        }
+    ],
+
+    //<<<<<<<<<<<<<<<<<<<<<<< DOSA VARIETIES >>>>>>>>>>>>>>>>>>>>>>>>>>
+    "DOSA VARIETIES": [
+    {
+        name: "Roast",
+        prices: {
+            nonAc: 75.00,
+            ac: 80.00,
+            parcel: 80.00
+        }
+    },
+    {
+        name: "Masal Roast",
+        prices: {
+            nonAc: 90.00,
+            ac: 95.00,
+            parcel: 95.00
+        }
+    },
+    {
+        name: "Rava Roast",
+        prices: {
+            nonAc: 80.00,
+            ac: 85.00,
+            parcel: 85.00
+        }
+    },
+    {
+        name: "Onion Rava Roast",
+        prices: {
+            nonAc: 95.00,
+            ac: 100.00,
+            parcel: 100.00
+        }
+    },
+    {
+        name: "Rava Masal Dosai",
+        prices: {
+            nonAc: 95.00,
+            ac: 100.00,
+            parcel: 100.00
+        }
+    },
+    {
+        name: "Cashew Rava Roast",
+        prices: {
+            nonAc: 100.00,
+            ac: 105.00,
+            parcel: 105.00
+        }
+    },
+    {
+        name: "Ghee Roast",
+        prices: {
+            nonAc: 90.00,
+            ac: 95.00,
+            parcel: 95.00
+        }
+    },
+    {
+        name: "Ghee Masal Roast",
+        prices: {
+            nonAc: 100.00,
+            ac: 105.00,
+            parcel: 105.00
+        }
+    },
+    {
+        name: "Oothapam (Plain)",
+        prices: {
+            nonAc: 75.00,
+            ac: 80.00,
+            parcel: 80.00
+        }
+    },
+    {
+        name: "Onion Oothapam",
+        prices: {
+            nonAc: 95.00,
+            ac: 100.00,
+            parcel: 100.00
+        }
+    },
+    {
+        name: "Tomato Oothappam",
+        prices: {
+            nonAc: 110.00,
+            ac: 115.00,
+            parcel: 115.00
+        }
+    },
+    {
+        name: "Onion Dosai",
+        prices: {
+            nonAc: 95.00,
+            ac: 100.00,
+            parcel: 100.00
+        }
+    },
+    {
+        name: "Kall Dosai",
+        prices: {
+            nonAc: 75.00,
+            ac: 80.00,
+            parcel: 80.00
+        }
+    },
+    {
+        name: "Kall Dosai (Single)",
+        prices: {
+            nonAc: 37.50,
+            ac: 40.00,
+            parcel: 40.00
+        }
+    },
+    {
+        name: "Mushroom Roast",
+        prices: {
+            nonAc: 110.00,
+            ac: 115.00,
+            parcel: 115.00
+        }
+    },
+    {
+        name: "Paneer Roast",
+        prices: {
+            nonAc: 110.00,
+            ac: 115.00,
+            parcel: 115.00
+        }
+    },
+    {
+        name: "Gobi Roast",
+        prices: {
+            nonAc: 110.00,
+            ac: 115.00,
+            parcel: 115.00
+        }
+    },
+    {
+        name: "Paruppu Podi Onion Oothapam",
+        prices: {
+            nonAc: 105.00,
+            ac: 110.00,
+            parcel: 110.00
+        }
+    },
+    {
+        name: "Paruppu Podi Oothapam",
+        prices: {
+            nonAc: 100.00,
+            ac: 105.00,
+            parcel: 105.00
+        }
+    },
+    {
+        name: "Paruppu Podi Dosai",
+        prices: {
+            nonAc: 100.00,
+            ac: 105.00,
+            parcel: 105.00
+        }
+    },
+    {
+        name: "Poondu Podi Roast",
+        prices: {
+            nonAc: 100.00,
+            ac: 105.00,
+            parcel: 105.00
+        }
+    },
+    {
+        name: "Poondu Podi Masal Roast",
+        prices: {
+            nonAc: 110.00,
+            ac: 115.00,
+            parcel: 115.00
+        }
+    },
+    {
+        name: "Karuveppilai Podi Roast",
+        prices: {
+            nonAc: 100.00,
+            ac: 105.00,
+            parcel: 105.00
+        }
+    },
+    {
+        name: "Karuveppilai Podi Masal Roast",
+        prices: {
+            nonAc: 110.00,
+            ac: 115.00,
+            parcel: 115.00
+        }
+    },
+    {
+        name: "Pirandai Podi Roast",
+        prices: {
+            nonAc: 100.00,
+            ac: 105.00,
+            parcel: 105.00
+        }
+    },
+    {
+        name: "Pirandai Podi Masal Roast",
+        prices: {
+            nonAc: 110.00,
+            ac: 115.00,
+            parcel: 115.00
+        }
+    },
+    {
+        name: "Poondu Podi Ghee Roast",
+        prices: {
+            nonAc: 110.00,
+            ac: 115.00,
+            parcel: 115.00
+        }
+    },
+    {
+        name: "Karuveppilai Podi Ghee Roast",
+        prices: {
+            nonAc: 110.00,
+            ac: 115.00,
+            parcel: 115.00
+        }
+    },
+    {
+        name: "Pirandai Podi Ghee Roast",
+        prices: {
+            nonAc: 110.00,
+            ac: 115.00,
+            parcel: 115.00
+        }
+    },
+    {
+        name: "Ghee Podi Masal Roast",
+        prices: {
+            nonAc: 120.00,
+            ac: 125.00,
+            parcel: 125.00
+        }
+    },
+    {
+        name: "Paruppu Podi Masal Roast",
+        prices: {
+            nonAc: 110.00,
+            ac: 115.00,
+            parcel: 115.00
+        }
+    },
+    {
+        name: "Ghee Rava Masal Dosai",
+        prices: {
+            nonAc: 115.00,
+            ac: 120.00,
+            parcel: 120.00
+        }
+    },
+    {
+        name: "Paruppu Podi Onion Dosai",
+        prices: {
+            nonAc: 115.00,
+            ac: 120.00,
+            parcel: 120.00
+        }
+    },
+    {
+        name: "Ghee Onion Masal Dosai",
+        prices: {
+            nonAc: 120.00,
+            ac: 125.00,
+            parcel: 125.00
+        }
+    },
+    {
+        name: "Paruppu Podi Ghee Dosai",
+        prices: {
+            nonAc: 110.00,
+            ac: 115.00,
+            parcel: 115.00
+        }
+    },
+    {
+        name: "Wheat Dosai Single",
+        prices: {
+            nonAc: 40.00,
+            ac: 42.50,
+            parcel: 42.50
+        }
+    },
+    {
+        name: "Wheat Dosai",
+        prices: {
+            nonAc: 80.00,
+            ac: 85.00,
+            parcel: 85.00
+        }
+    }       
+    ],
+
+    //<<<<<<<<<<<<<<<<<<<<<<<  IDIYAPPAM & APPAM  >>>>>>>>>>>>>>>>>>>>>>>>>>
+    "IDIYAPPAM & APPAM": [
+    {
+        "name": "Aappam",
+        "prices": {
+            "ac": 55.00,
+            "nonAc": 50.00,
+            "parcel": 55.00
+        }
+    },
+    {
+        "name": "Podi Aappam",
+        "prices": {
+            "ac": 65.00,
+            "nonAc": 60.00,
+            "parcel": 65.00
+        }
+    },
+    {
+        "name": "Gravy Aappam",
+        "prices": {
+            "ac": 80.00,
+            "nonAc": 70.00,
+            "parcel": 80.00
+        }
+    },
+    {
+        "name": "Idiyappam Sothi",
+        "prices": {
+            "ac": 70.00,
+            "nonAc": 65.00,
+            "parcel": 70.00
+        }
+    },
+    {
+        "name": "Idiyappam Sothi Single",
+        "prices": {
+            "ac": 35.00,
+            "nonAc": 32.50,
+            "parcel": 35.00
+        }
+    }    
+    ],
+
+    //<<<<<<<<<<<<<<<<<<< IDLY VARIETIES >>>>>>>>>>>>>>>>>>>>>
+    "IDLY VARIETIES": [
+    {
+        "name": "Poondu PodI Idly",
+        "prices": {
+            "nonAc": 140.00,
+            "ac": 150.00,
+            "parcel": 150.00
+        }
+    },
+    {
+        "name": "Karuveppilai PodI Idly",
+        "prices": {
+            "nonAc": 140.00,
+            "ac": 150.00,
+            "parcel": 150.00
+        }
+    },
+    {
+        "name": "Pirandai PodI Idly",
+        "prices": {
+            "nonAc": 140.00,
+            "ac": 150.00,
+            "parcel": 150.00
+        }
+    },
+    {
+        "name": "Chilly Idly",
+        "prices": {
+            "nonAc": 140.00,
+            "ac": 150.00,
+            "parcel": 150.00
+        }
+    },
+    {
+        "name": "Paruppu PodI Idly",
+        "prices": {
+            "nonAc": 140.00,
+            "ac": 150.00,
+            "parcel": 150.00
+        }
+    },
+    {
+        "name": "Onion Idly",
+        "prices": {
+            "nonAc": 140.00,
+            "ac": 150.00,
+            "parcel": 150.00
+        }
+    },
+    {
+        "name": "Pepper Idly",
+        "prices": {
+            "nonAc": 140.00,
+            "ac": 150.00,
+            "parcel": 150.00
+        }
+    },
+    {
+        "name": "Podi Paniyaram",
+        "prices": {
+            "nonAc": 130.00,
+            "ac": 140.00,
+            "parcel": 140.00
+        }
+    }     
+    ],
+
+    //<<<<<<<<<<<<<<<<<<<<<<< MEALS >>>>>>>>>>>>>>>>>>>>>>>>>>
+    "MEALS": [
+    {
+        "name": "South Indian Meals",
+        "prices": {
+            "nonAc": 150.00,
+            "ac": 175.00,
+            "parcel": 110.00
+        }
+    }
+    ],
+
+    //<<<<<<<<<<<<<<<<<<<<<<< VARIETIES RICE >>>>>>>>>>>>>>>>>>>>>>>>>>
+    "VARIETIES RICE": [
+    {
+        "name": "Sambar Rice",
+        "prices": {
+            "ac": 75.00,
+            "nonAc": 70.00,
+            "parcel": 75.00
+        }
+    },
+    {
+        "name": "Lemon Rice",
+        "prices": {
+            "ac": 75.00,
+            "nonAc": 70.00,
+            "parcel": 75.00
+        }
+    },
+    {
+        "name": "Tomato Rice",
+        "prices": {
+            "ac": 75.00,
+            "nonAc": 70.00,
+            "parcel": 75.00
+        }
+    },
+    {
+        "name": "Curd Rice",
+        "prices": {
+            "ac": 75.00,
+            "nonAc": 70.00,
+            "parcel": 75.00
+        }
+    },
+    {
+        "name": "Veg Biriyani",
+        "prices": {
+            "ac": 85.00,
+            "nonAc": 80.00,
+            "parcel": 85.00
+        }
+    },
+    {
+        "name": "Mushroom Biriyani",
+        "prices": {
+            "ac": 100.00,
+            "nonAc": 95.00,
+            "parcel": 100.00
+        }
+    },
+    {
+        "name": "Paneer Biriyani",
+        "prices": {
+            "ac": 100.00,
+            "nonAc": 95.00,
+            "parcel": 100.00
+        }
+    },
+    {
+        "name": "Gobi Biryani",
+        "prices": {
+            "ac": 100.00,
+            "nonAc": 95.00,
+            "parcel": 100.00
+        }
+    }
+    ],
+
+    //<<<<<<<<<<<<<<<<<<< FRIED RICE & NOODLES >>>>>>>>>>>>>>>>>>>>>
+    "FRIED RICE & NOODLES": [
+    {
+        "name": "Fried Rice",
+        "prices": {
+            "nonAc": 140.00,
+            "ac": 150.00,
+            "parcel": 150.00
+        }
+    },
+    {
+        "name": "Mushroom Fried Rice",
+        "prices": {
+            "nonAc": 150.00,
+            "ac": 160.00,
+            "parcel": 160.00
+        }
+    },
+    {
+        "name": "Paneer Fried Rice",
+        "prices": {
+            "nonAc": 150.00,
+            "ac": 160.00,
+            "parcel": 160.00
+        }
+    },
+    {
+        "name": "Schezwan Fried Rice",
+        "prices": {
+            "nonAc": 150.00,
+            "ac": 160.00,
+            "parcel": 160.00
+        }
+    },
+    {
+        "name": "Gobi Fried Rice",
+        "prices": {
+            "nonAc": 150.00,
+            "ac": 160.00,
+            "parcel": 160.00
+        }
+    },
+    {
+        "name": "Noodles",
+        "prices": {
+            "nonAc": 140.00,
+            "ac": 150.00,
+            "parcel": 150.00
+        }
+    },
+    {
+        "name": "Mushroom Noodles",
+        "prices": {
+            "nonAc": 150.00,
+            "ac": 160.00,
+            "parcel": 160.00
+        }
+    },
+    {
+        "name": "Paneer Noodles",
+        "prices": {
+            "nonAc": 150.00,
+            "ac": 160.00,
+            "parcel": 160.00
+        }
+    },
+    {
+        "name": "Schezwan Noodles",
+        "prices": {
+            "nonAc": 150.00,
+            "ac": 160.00,
+            "parcel": 160.00
+        }
+    },
+    {
+        "name": "Jeera Rice",
+        "prices": {
+            "nonAc": 150.00,
+            "ac": 160.00,
+            "parcel": 160.00
+        }
+    },
+    {
+        "name": "Ghee Rice",
+        "prices": {
+            "nonAc": 150.00,
+            "ac": 160.00,
+            "parcel": 160.00
+        }
+    },
+    {
+        "name": "Veg Pulav",
+        "prices": {
+            "nonAc": 140.00,
+            "ac": 150.00,
+            "parcel": 150.00
+        }
+    },
+    {
+        "name": "Paneer Pulau",
+        "prices": {
+            "nonAc": 150.00,
+            "ac": 160.00,
+            "parcel": 160.00
+        }
+    },
+    {
+        "name": "Mushroom Pulau",
+        "prices": {
+            "nonAc": 150.00,
+            "ac": 160.00,
+            "parcel": 160.00
+        }
+    },
+    {
+        "name": "Mix Fried Rice",
+        "prices": {
+            "nonAc": 170.00,
+            "ac": 180.00,
+            "parcel": 180.00
+        }
+    }       
+    ],
+
+
+    //<<<<<<<<<<<<<<<<<<< STARTERS >>>>>>>>>>>>>>>>>>>>>
+    "STARTERS": [
+    {
+        "name": "Gobi 65",
+        "prices": {
+            "nonAc": 100.00,
+            "ac": 105.00,
+            "parcel": 105.00
+        }
+    },
+    {
+        "name": "Mushroom 65",
+        "prices": {
+            "nonAc": 100.00,
+            "ac": 105.00,
+            "parcel": 105.00
+        }
+    },
+    {
+        "name": "Paneer 65",
+        "prices": {
+            "nonAc": 100.00,
+            "ac": 105.00,
+            "parcel": 105.00
+        }
+    },
+    {
+        "name": "Pakoda",
+        "prices": {
+            "nonAc": 70.00,
+            "ac": 75.00,
+            "parcel": 75.00
+        }
+    },
+    {
+        "name": "Spring roll",
+        "prices": {
+            "nonAc":0,
+            "ac": 0,
+            "parcel": 0
+        }
+    },
+    {
+        "name": "Masala pappad",
+        "prices": {
+            "nonAc": 0,
+            "ac": 0,
+            "parcel": 0
+        }
+    },
+    {
+        "name": "Cutlet",
+        "prices": {
+            "nonAc": 0,
+            "ac": 0,
+            "parcel": 0
+        }
+    },
+    ],
+
+    //<<<<<<<<<<<<<<<<<<< PAROTTA VARIETIES >>>>>>>>>>>>>>>>>>>>>
+    "PAROTTA & CHAPPATHI VARIETIES": [
+    {
+        "name": "Chappathi (2pcs)",
+        "prices": {
+            "nonAc": 75.00,
+            "ac": 80.00,
+            "parcel": 80.00
+        }
+    },
+    {
+        "name": "Chappathi (Single)",
+        "prices": {
+            "nonAc": 37.50,
+            "ac": 40.00,
+            "parcel": 40.00
+        }
+    },
+    {
+        "name": "Onion Chappathi",
+        "prices": {
+            "nonAc": 0,
+            "ac": 0,
+            "parcel": 0
+        }
+    },
+    {
+        "name": "Mushroom Chappathi",
+        "prices": {
+            "nonAc": 0,
+            "ac": 0,
+            "parcel": 0
+        }
+    },
+    {
+        "name": "Paneer Chappathi",
+        "prices": {
+            "nonAc": 0,
+            "ac": 0,
+            "parcel": 0
+        }
+    },
+    {
+        "name": "Garlic Masala Chappathi",
+        "prices": {
+            "nonAc": 0,
+            "ac": 0,
+            "parcel": 0
+        }
+    },
+    {
+        "name": "Malli Chappathi",
+        "prices": {
+            "nonAc": 0,
+            "ac": 0,
+            "parcel": 0
+        }
+    },
+    {
+        "name": "Potato Chappathi",
+        "prices": {
+            "nonAc": 0,
+            "ac": 0,
+            "parcel": 0
+        }
+    },
+    {
+        "name": "Parotta (2pcs)",
+        "prices": {
+            "nonAc": 75.00,
+            "ac": 80.00,
+            "parcel": 80.00
+        }
+    },
+    {
+        "name": "Parotta (Single)",
+        "prices": {
+            "nonAc": 37.50,
+            "ac": 40.00,
+            "parcel": 40.00
+        }
+    },
+    {
+        "name": "Chilly Parotta",
+        "prices": {
+            "nonAc": 140.00,
+            "ac": 150.00,
+            "parcel": 150.00
+        }
+    },
+    {
+        "name": "Kaima Parotta",
+        "prices": {
+            "nonAc": 140.00,
+            "ac": 150.00,
+            "parcel": 150.00
+        }
+    },
+    {
+        "name": "Pepper Parotta",
+        "prices": {
+            "nonAc": 140.00,
+            "ac": 150.00,
+            "parcel": 150.00
+        }
+    },
+    {
+        "name": "Paneer Parotta",
+        "prices": {
+            "nonAc": 150.00,
+            "ac": 160.00,
+            "parcel": 160.00
+        }
+    },
+    {
+        "name": "Mushroom Parotta",
+        "prices": {
+            "nonAc": 150.00,
+            "ac": 160.00,
+            "parcel": 160.00
+        }
+    },
+    {
+        "name": "Gobi Parotta",
+        "prices": {
+            "nonAc": 150.00,
+            "ac": 160.00,
+            "parcel": 160.00
+        }
+    },
+    {
+        "name": "Aalu Parotta",
+        "prices": {
+            "nonAc": 0,
+            "ac": 0,
+            "parcel": 0
+        }
+    },
+    {
+        "name": "Tandoori Parotta",
+        "prices": {
+            "nonAc": 0,
+            "ac": 0,
+            "parcel": 0
+        }
+    },
+    {
+        "name": "Veechi Parotta",
+        "prices": {
+            "nonAc": 0,
+            "ac": 0,
+            "parcel": 0
+        }
+    },
+    {
+        "name": "Paneer Veechi Parotta",
+        "prices": {
+            "nonAc": 0,
+            "ac": 0,
+            "parcel": 0
+        }
+    },
+    {
+        "name": "Mushroom Veechi Parotta",
+        "prices": {
+            "nonAc": 0,
+            "ac": 0,
+            "parcel": 0
+        }
+    },
+    {
+        "name": "Capsicum Veechi Parotta",
+        "prices": {
+            "nonAc": 0,
+            "ac": 0,
+            "parcel": 0
+        }
+    },
+    {
+        "name": "Veg Masala Veechi Parotta",
+        "prices": {
+            "nonAc": 0,
+            "ac": 0,
+            "parcel": 0
+        }
+    },
+    {
+        "name": "CHETTINAD Veechi Parotta",
+        "prices": {
+            "nonAc": 0,
+            "ac": 0,
+            "parcel": 0
+        }
+    },              
+    ],
+
+    //<<<<<<<<<<<<<<<<<<< SEVAI VARIETIES >>>>>>>>>>>>>>>>>>>>>
+    "SEVAI VARIETIES": [
+    {
+        "name": "Podi Sevai",
+        "prices": {
+            "nonAc": 85.00,
+            "ac": 90.00,
+            "parcel": 90.00
+        }
+    },
+    {
+        "name": "Tomatto Sevai",
+        "prices": {
+            "nonAc": 85.00,
+            "ac": 90.00,
+            "parcel": 90.00
+        }
+    },
+    {
+        "name": "Mushroom Sevai",
+        "prices": {
+            "nonAc": 85.00,
+            "ac": 90.00,
+            "parcel": 90.00
+        }
+    },
+    {
+        "name": "Paneer Sevai",
+        "prices": {
+            "nonAc": 85.00,
+            "ac": 90.00,
+            "parcel": 90.00
+        }
+    },
+    {
+        "name": "Garlic Sevai",
+        "prices": {
+            "nonAc": 85.00,
+            "ac": 90.00,
+            "parcel": 90.00
+        }
+    },
+    {
+        "name": "Onion Sevai",
+        "prices": {
+            "nonAc": 85.00,
+            "ac": 90.00,
+            "parcel": 90.00
+        }
+    },
+    {
+        "name": "Lemon Sevai",
+        "prices": {
+            "nonAc": 85.00,
+            "ac": 90.00,
+            "parcel": 90.00
+        }
+    }
+    ],
+    
+    
+    //<<<<<<<<<<<<<<<<<<< TANDOORI ITEMS >>>>>>>>>>>>>>>>>>>>>
+    "TANDOORI ITEMS": [
+    {
+        name: "PLAIN NAAN",
+        prices: {
+            ac: 0,
+            nonAc: 0,
+            parcel: 0
+        }
+    },
+    {
+        name: "BUTTER NAAN",
+        prices: {
+            ac: 0,
+            nonAc: 0,
+            parcel: 0
+        }
+    },
+    {
+        name: "KASHMIR NAAN",
+        prices: {
+            ac: 0,
+            nonAc: 0,
+            parcel: 0
+        }
+    },
+    {
+        name: "PANEER NAAN",
+        prices: {
+            ac: 0,
+            nonAc: 0,
+            parcel: 0
+        }
+    },
+    {
+        name: "ONION KULCHA",
+        prices: {
+            ac: 0,
+            nonAc: 0,
+            parcel: 0
+        }
+    },
+    {
+        name: "MINT KULCHA",
+        prices: {
+            ac: 0,
+            nonAc: 0,
+            parcel: 0
+        }
+    },
+    {
+        name: "BUTTER KULCHA",
+        prices: {
+            ac: 0,
+            nonAc: 0,
+            parcel: 0
+        }
+    },
+    {
+        name: "PANEER KULCHA",
+        prices: {
+            ac: 0,
+            nonAc: 0,
+            parcel: 0
+        }
+    },
+    {
+        name: "ROTI",
+        prices: {
+            ac: 0,
+            nonAc: 0,
+            parcel: 0
+        }
+    },
+    {
+        name: "BUTTER ROTI",
+        prices: {
+            ac: 0,
+            nonAc: 0,
+            parcel: 0
+        }
+    },
+    {
+        name: "RUMALI ROTI",
+        prices: {
+            ac: 0,
+            nonAc: 0,
+            parcel: 0
+        }
+    },
+],
+
+//<<<<<<<<<<<<<<<<<<< MASALAS & GRAVY >>>>>>>>>>>>>>>>>>>>>
+"MASALAS & GRAVY": [
+{
+    "name": "Gobi Masala",
+    "prices": {
+        "nonAc": 150.00,
+        "ac": 160.00,
+        "parcel": 160.00
+    }
+},
+{
+    "name": "Chenna Masala",
+    "prices": {
+        "nonAc": 150.00,
+        "ac": 160.00,
+        "parcel": 160.00
+    }
+},
+{
+    "name": "Paneer Butter Masala",
+    "prices": {
+        "nonAc": 150.00,
+        "ac": 160.00,
+        "parcel": 160.00
+    }
+},
+{
+    "name": "Mushroom Masala",
+    "prices": {
+        "nonAc": 150.00,
+        "ac": 160.00,
+        "parcel": 160.00
+    }
+},
+{
+    "name": "Dhall Fry",
+    "prices": {
+        "nonAc": 150.00,
+        "ac": 160.00,
+        "parcel": 160.00
+    }
+},
+{
+    "name": "Gobi Manchurian",
+    "prices": {
+        "nonAc": 150.00,
+        "ac": 160.00,
+        "parcel": 160.00
+    }
+},
+{
+    "name": "Mushroom Manchurian",
+    "prices": {
+        "nonAc": 150.00,
+        "ac": 160.00,
+        "parcel": 160.00
+    }
+},
+{
+    "name": "Paneer Manchurian",
+    "prices": {
+        "nonAc": 150.00,
+        "ac": 160.00,
+        "parcel": 160.00
+    }
+},
+{
+    "name": "Pepper Fry",
+    "prices": {
+        "nonAc": 150.00,
+        "ac": 160.00,
+        "parcel": 160.00
+    }
+},
+{
+    "name": "alu gobi masala",
+    "prices": {
+        "nonAc": 0,
+        "ac": 0,
+        "parcel": 0
+    }
+},
+{
+    "name": "alutham masala",
+    "prices": {
+        "nonAc": 0,
+        "ac": 0,
+        "parcel": 0
+    }
+},
+{
+    "name": "Pepper Fry",
+    "prices": {
+        "nonAc": 0,
+        "ac": 0,
+        "parcel": 0
+    }
+},
+{
+    "name": "green pea masala",
+    "prices": {
+        "nonAc": 0,
+        "ac": 0,
+        "parcel": 0
+    }
+},
+{
+    "name": "chena masala",
+    "prices": {
+        "nonAc": 0,
+        "ac": 0,
+        "parcel": 0
+    }
+},
+{
+    "name": "mushroom kadai",
+    "prices": {
+        "nonAc": 0,
+        "ac": 0,
+        "parcel": 0
+    }
+},
+{
+    "name": "paneer kadai",
+    "prices": {
+        "nonAc": 0,
+        "ac": 0,
+        "parcel": 0
+    }
+},
+{
+    "name": "veg kadai",
+    "prices": {
+        "nonAc": 0,
+        "ac": 0,
+        "parcel": 0
+    }
+},
+{
+    "name": "chettinad masala",
+    "prices": {
+        "nonAc": 0,
+        "ac": 0,
+        "parcel": 0
+    }
+},
+],
+
+//<<<<<<<<<<<<<<<<<<< SALAD >>>>>>>>>>>>>>>>>>>>>
+"SALAD": [
+    {
+        name: "VEG SALAD",
+        prices: {
+            ac: 0,
+            nonAc: 0,
+            parcel: 0
+        }
+    },
+    {
+        name: "ONION SALAD",
+        prices: {
+            ac: 0,
+            nonAc: 0,
+            parcel: 0
+        }
+    },
+    {
+        name: "PANEER SALAD",
+        prices: {
+            ac: 0,
+            nonAc: 0,
+            parcel: 0
+        }
+    },
+],
+
+//<<<<<<<<<<<<<<<<<<< TIKKA >>>>>>>>>>>>>>>>>>>>>
+"TIKKA": [
+    {
+        name: "PANEER TIKKA",
+        prices: {
+            ac: 0,
+            nonAc: 0,
+            parcel: 0
+        }
+    },
+    {
+        name: "MUSHROOM TIKKA",
+        prices: {
+            ac: 0,
+            nonAc: 0,
+            parcel: 0
+        }
+    },
+    {
+        name: "GOBI TIKKA",
+        prices: {
+            ac: 0,
+            nonAc: 0,
+            parcel: 0
+        }
+    }
+],
+
+//<<<<<<<<<<<<<<<<<<< RAITAS >>>>>>>>>>>>>>>>>>>>>
+"RAITAS": [
+    {
+        name: "VEG RAITA",
+        prices: {
+            ac: 0,
+            nonAc: 0,
+            parcel: 0
+        }
+    },
+    {
+        name: "ONION RAITA",
+        prices: {
+            ac: 0,
+            nonAc: 0,
+            parcel: 0
+        }
+    },
+    {
+        name: "FRUIT RAITA",
+        prices: {
+            ac: 0,
+            nonAc: 0,
+            parcel: 0
+        }
+    }
+],
+
+//<<<<<<<<<<<<<<<<<<< SOUPS >>>>>>>>>>>>>>>>>>>>>
+"SOUPS": [
+    {
+        name: "VEG SOUP",
+        prices: {
+            ac: 0,
+            nonAc: 0,
+            parcel: 0
+        }
+    },
+    {
+        name: "GARLIC SOUP",
+        prices: {
+            ac: 0,
+            nonAc: 0,
+            parcel: 0
+        }
+    },
+    {
+        name: "TOMATO SOUP",
+        prices: {
+            ac: 0,
+            nonAc: 0,
+            parcel: 0
+        }
+    },
+    {
+        name: "MUSHROOM SOUP",
+        prices: {
+            ac: 0,
+            nonAc: 0,
+            parcel: 0
+        }
+    },
+    {
+        name: "PEPPER SOUP",
+        prices: {
+            ac: 0,
+            nonAc: 0,
+            parcel: 0
+        }
+    },
+    {
+        name: "VEG CLEAR SOUP",
+        prices: {
+            ac: 0,
+            nonAc: 0,
+            parcel: 0
+        }
+    },
+],
+
+//<<<<<<<<<<<<<<<<<<< CHAAT ITEMS >>>>>>>>>>>>>>>>>>>>>
+"CHAAT VARIETIES": [
+    {
+    "name": "Pav Bhaji Extra",
+    "prices": {
+        "nonAc": 25.00,
+        "ac": 30.00,
+        "parcel": 30.00
+    }
+    },
+    {
+    "name": "Pani Puri",
+    "prices": {
+        "nonAc": 40.00,
+        "ac": 40.00,
+        "parcel": 45.00
+    }
+    },
+    {
+    "name": "Dhai Puri",
+    "prices": {
+        "nonAc": 50.00,
+        "ac": 50.00,
+        "parcel": 55.00
+    }
+    },
+    {
+    "name": "Masal Puri",
+    "prices": {
+        "nonAc": 50.00,
+        "ac": 50.00,
+        "parcel": 55.00
+    }
+    },
+    {
+    "name": "Sev Puri",
+    "prices": {
+        "nonAc": 50.00,
+        "ac": 50.00,
+        "parcel": 55.00
+    }
+    },
+    {
+    "name": "Aloo Chaat",
+    "prices": {
+        "nonAc": 50.00,
+        "ac": 50.00,
+        "parcel": 55.00
+    }
+    },
+    {
+    "name": "Bread Chaat",
+    "prices": {
+        "nonAc": 50.00,
+        "ac": 50.00,
+        "parcel": 55.00
+    }
+    },
+    {
+    "name": "Bhel Puri",
+    "prices": {
+        "nonAc": 50.00,
+        "ac": 50.00,
+        "parcel": 55.00
+    }
+    },
+    {
+    "name": "Mix Chat",
+    "prices": {
+        "nonAc": 60.00,
+        "ac": 60.00,
+        "parcel": 65.00
+    }
+    },
+    {
+    "name": "Chana Samosa",
+    "prices": {
+        "nonAc": 50.00,
+        "ac": 50.00,
+        "parcel": 55.00
+    }
+    },
+    {
+    "name": "Dahi Bhel Puri",
+    "prices": {
+        "nonAc": 60.00,
+        "ac": 60.00,
+        "parcel": 65.00
+    }
+    },
+    {
+    "name": "Pav Bhaji",
+    "prices": {
+        "nonAc": 60.00,
+        "ac": 60.00,
+        "parcel": 65.00
+    }
+    },
+    {
+    "name": "Veg Sandwich",
+    "prices": {
+        "nonAc": 40.00,
+        "ac": 40.00,
+        "parcel": 45.00
+    }
+    },
+    {
+    "name": "Mushroom Sandwich",
+    "prices": {
+        "nonAc": 60.00,
+        "ac": 60.00,
+        "parcel": 65.00
+    }
+    },
+    {
+    "name": "Paneer Sandwich",
+    "prices": {
+        "nonAc": 60.00,
+        "ac": 60.00,
+        "parcel": 65.00
+    }
+    },
+    {
+    "name": "Samosa (1 Piece)",
+    "prices": {
+        "nonAc": 15.00,
+        "ac": 15.00,
+        "parcel": 15.00
+    }
+    },
+    {
+    "name": "Dahi Pappadi Chat",
+    "prices": {
+        "nonAc": 60.00,
+        "ac": 60.00,
+        "parcel": 60.00
+    }
+    },
+    {
+    "name": "Cheese Sandwich",
+    "prices": {
+        "nonAc": 70.00,
+        "ac": 70.00,
+        "parcel": 75.00
+    }
+    }       
+    ],
+
+    //<<<<<<<<<<<<<<<<<<<<<<< SNACKS >>>>>>>>>>>>>>>>>>>>>>>>>>
+
+"SNACKS": [
+{
+name: "Samosa",
+prices: {
+    ac: 25.00,
+    nonAc: 20.00,
+    parcel: 22.00
+}
+},
+{
+name: "Cutlet",
+prices: {
+    ac: 30.00,
+    nonAc: 25.00,
+    parcel: 28.00
+}
+},
+{
+name: "Bonda",
+prices: {
+    ac: 35.00,
+    nonAc: 30.00,
+    parcel: 33.00
+}
+},
+{
+name: "Vada",
+prices: {
+    ac: 40.00,
+    nonAc: 35.00,
+    parcel: 38.00
+}
+},
+{
+name: "Pakoda",
+prices: {
+    ac: 50.00,
+    nonAc: 45.00,
+    parcel: 48.00
+}
+}
+],
+
+    //<<<<<<<<<<<<<<<<<<< FRESH JUICE >>>>>>>>>>>>>>>>>>>>>
+    "FRESH JUICES": [
+    {
+    "name": "Juice Lemon",
+    "prices": {
+        "nonAc": 30.00,
+        "ac": 30.00,
+        "parcel": 35.00
+    }
+    },
+    {
+    "name": "Juice Lemon Soda",
+    "prices": {
+        "nonAc": 40.00,
+        "ac": 40.00,
+        "parcel": 45.00
+    }
+    },
+    {
+    "name": "Juice Musambi",
+    "prices": {
+        "nonAc": 65.00,
+        "ac": 65.00,
+        "parcel": 70.00
+    }
+    },
+    {
+    "name": "Juice Pomegranate",
+    "prices": {
+        "nonAc": 80.00,
+        "ac": 80.00,
+        "parcel": 85.00
+    }
+    },
+    {
+    "name": "Juice Orange",
+    "prices": {
+        "nonAc": 65.00,
+        "ac": 65.00,
+        "parcel": 70.00
+    }
+    },
+    {
+    "name": "Juice Watermelon",
+    "prices": {
+        "nonAc": 60.00,
+        "ac": 60.00,
+        "parcel": 65.00
+    }
+    },
+    {
+    "name": "Juice Mulaam",
+    "prices": {
+        "nonAc": 65.00,
+        "ac": 65.00,
+        "parcel": 70.00
+    }
+    },
+    {
+    "name": "Lassi",
+    "prices": {
+        "nonAc": 50.00,
+        "ac": 50.00,
+        "parcel": 50.00
+    }
+    },
+    {
+    "name": "Vennila Milk Shake",
+    "prices": {
+        "nonAc": 100.00,
+        "ac": 100.00,
+        "parcel": 105.00
+    }
+    },
+    {
+    "name": "Strawbery Milk Shake",
+    "prices": {
+        "nonAc": 100.00,
+        "ac": 100.00,
+        "parcel": 105.00
+    }
+    },
+    {
+    "name": "Choco Milk Shake",
+    "prices": {
+        "nonAc": 100.00,
+        "ac": 100.00,
+        "parcel": 105.00
+    }
+    }       
+    ],
+
+    //<<<<<<<<<<<<<<<<<<< TEA & COFFEE >>>>>>>>>>>>>>>>>>>>>
+    "TEA & COFFEE": [
+    {
+    "name": "Coffee",
+    "prices": {
+        "nonAc": 30.00,
+        "ac": 32.00,
+        "parcel": 33.00
+    }
+    },
+    {
+    "name": "Tea",
+    "prices": {
+        "nonAc": 25.00,
+        "ac": 27.00,
+        "parcel": 28.00
+    }
+    },
+    {
+    "name": "Milk",
+    "prices": {
+        "nonAc": 25.00,
+        "ac": 25.00,
+        "parcel": 26.00
+    }
+    },
+    {
+    "name": "Horlicks",
+    "prices": {
+        "nonAc": 50.00,
+        "ac": 50.00,
+        "parcel": 50.00
+    }
+    },
+    {
+    "name": "Boost",
+    "prices": {
+        "nonAc": 50.00,
+        "ac": 50.00,
+        "parcel": 50.00
+    }
+    },
+    {
+    "name": "Hot Badam Milk",
+    "prices": {
+        "nonAc": 50.00,
+        "ac": 50.00,
+        "parcel": 50.00
+    }
+    },
+    {
+    "name": "Lemon Tea",
+    "prices": {
+        "nonAc": 25.00,
+        "ac": 25.00,
+        "parcel": 25.00
+    }
+    },
+    {
+    "name": "Panagarkandu Milk",
+    "prices": {
+        "nonAc": 40.00,
+        "ac": 40.00,
+        "parcel": 40.00
+    }
+    },
+    {
+    "name": "Sukku Coffee",
+    "prices": {
+        "nonAc": 35.00,
+        "ac": 35.00,
+        "parcel": 35.00
+    }
+    },
+    {
+    "name": "Black Tea",
+    "prices": {
+        "nonAc": 20.00,
+        "ac": 20.00,
+        "parcel": 20.00
+    }
+    },
+    {
+    "name": "Black Coffee",
+    "prices": {
+        "nonAc": 23.00,
+        "ac": 23.00,
+        "parcel": 23.00
+    }
+    }       
+    ],
+};
+        
+        function initializeCategories() {
+            const grid = document.getElementById('categoriesGrid');
+            categories.forEach((category, index) => {
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.style.animationDelay = `${index * 0.1}s`;
+                card.onclick = () => showMenuItems(category.name);
+                card.innerHTML = `
+                    <div class="category-icon">${category.icon}</div>
+                    <div class="category-name">${category.name}</div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function showMenuItems(categoryName) {
+            document.getElementById('categoriesScreen').classList.remove('active');
+            document.getElementById('menuItemsScreen').classList.add('active');
+            document.getElementById('selectedCategoryTitle').textContent = categoryName;
+
+            const menuItemsList = document.getElementById('menuItemsList');
+            menuItemsList.innerHTML = '';
+
+            const items = menuItems[categoryName] || [];
+            items.forEach(item => {
+                const itemCard = document.createElement('div');
+                itemCard.className = 'card';
+                itemCard.innerHTML = `
+                    <h3 style="font-size: 1rem; font-weight: 600; margin-bottom: 8px;">${item.name}</h3>
+                    <div class="price-grid">
+                        <div class="price-box ac">
+                            <div class="price-label">AC</div>
+                            <div class="price-value">₹${item.prices.ac}</div>
+                        </div>
+                        <div class="price-box non-ac">
+                            <div class="price-label">Non-AC</div>
+                            <div class="price-value">₹${item.prices.nonAc}</div>
+                        </div>
+                        <div class="price-box parcel">
+                            <div class="price-label">Parcel</div>
+                            <div class="price-value">₹${item.prices.parcel}</div>
+                        </div>
+                    </div>
+                `;
+                menuItemsList.appendChild(itemCard);
+            });
+        }
+
+        function showCategories() {
+            document.getElementById('menuItemsScreen').classList.remove('active');
+            document.getElementById('categoriesScreen').classList.add('active');
+        }
+
+        window.onload = initializeCategories;
+    </script>
+</body>
+</html>
